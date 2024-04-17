@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the structure of a task
+typedef struct Task {
+    char name[50];
+    int priority;
+    struct Task* next; // Pointer to the next task
+} Task;
+
+// Function to create a new task node
+Task* createTask(const char* name, int priority) {
+    Task* newTask = (Task*)malloc(sizeof(Task));
+    if (newTask == NULL) {
+        printf("Memory allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    strcpy(newTask->name, name);
+    newTask->priority = priority;
+    newTask->next = NULL;
+    return newTask;
+}
+
+// Function to insert a new task into the list based on priority
+void insertTask(Task** head, Task* newTask) {
+    if (*head == NULL || (*head)->priority > newTask->priority) {
+        newTask->next = *head;
+        *head = newTask;
+    } else {
+        Task* current = *head;
+        while (current->next != NULL && current->next->priority <= newTask->priority) {
+            current = current->next;
+        }
+        newTask->next = current->next;
+        current->next = newTask;
+    }
+}
+
+// Function to print all tasks in the list
+void printTasks(Task* head) {
+    printf("Printing task list:\n");
+    while (head != NULL) {
+        printf("Task Name: %s, Priority: %d\n", head->name, head->priority);
+        head = head->next;
+    }
+}
+
+int main() {
+    Task* head = NULL; // Initialize an empty task list
+
+    char name[50];
+    int priority;
+    char choice;
+
+    // Loop to take input from the user until the user chooses to stop
+    do {
+        printf("Enter task name: ");
+        scanf("%s", name);
+        printf("Enter task priority: ");
+        scanf("%d", &priority);
+
+        Task* newTask = createTask(name, priority);
+        insertTask(&head, newTask);
+
+        printf("Do you want to add another task? (y/n): ");
+        scanf(" %c", &choice); // Note the space before %c to consume the newline character
+
+    } while (choice == 'y' || choice == 'Y');
+
+    printf("Tasks created and inserted.\n");
+
+    // Print the task list
+    printTasks(head);
+
+    // Free memory
+    while (head != NULL) {
+        Task* temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+}
