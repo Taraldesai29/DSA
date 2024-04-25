@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Define the structure of a task
 typedef struct Task {
     char name[50];
     int priority;
     struct Task* next; // Pointer to the next task
 } Task;
 
-// Function to create a new task node
 Task* createTask(const char* name, int priority) {
     Task* newTask = (Task*)malloc(sizeof(Task));
     if (newTask == NULL) {
@@ -22,7 +20,6 @@ Task* createTask(const char* name, int priority) {
     return newTask;
 }
 
-// Function to insert a new task into the list based on priority
 void insertTask(Task** head, Task* newTask) {
     if (*head == NULL || (*head)->priority > newTask->priority) {
         newTask->next = *head;
@@ -37,7 +34,6 @@ void insertTask(Task** head, Task* newTask) {
     }
 }
 
-// Function to print all tasks in the list
 void printTasks(Task* head) {
     printf("Printing task list:\n");
     while (head != NULL) {
@@ -53,7 +49,6 @@ int main() {
     int priority;
     char choice;
 
-    // Loop to take input from the user until the user chooses to stop
     do {
         printf("Enter task name: ");
         scanf("%s", name);
@@ -70,10 +65,8 @@ int main() {
 
     printf("Tasks created and inserted.\n");
 
-    // Print the task list
     printTasks(head);
 
-    // Free memory
     while (head != NULL) {
         Task* temp = head;
         head = head->next;
